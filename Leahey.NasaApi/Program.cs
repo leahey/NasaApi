@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using Leahey.NasaApi.CodeQuality;
 using Leahey.NasaApi.Implementations;
 using Leahey.NasaApi.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +15,8 @@ namespace Leahey.NasaApi
         #endregion
 
         #region private methods
+        [NDependIgnore("Disposal")]
+        [ExcludeFromCodeCoverage]
         private static void DisposeServices()
         {
             if (_serviceProvider == null)
@@ -24,19 +28,25 @@ namespace Leahey.NasaApi
             }
         }
 
+        [NDependIgnore("DI service registration")]
+        [ExcludeFromCodeCoverage]
         private static void RegisterServices()
         {
             var services = new ServiceCollection();
             services
                 .AddSingleton<IConsoleApplication, ConsoleApplication>()
-                .AddSingleton<INasaApiClient, NasaApiClient>();
+                .AddSingleton<INasaApiClient, NasaApiClient>()
+                .AddScoped<IWebClientProxy, WebClientProxy>()
+                .AddScoped<IMarsRoverUtils, MarsRoverUtils>();
             _serviceProvider = services.BuildServiceProvider(true);
         }
-        
+
         #endregion
 
+        [NDependIgnore("Largely a pass-through method")]
         static async Task Main(string[] args)
         {
+            //ncrunch: no coverage start
             RegisterServices();
             IServiceScope scope = _serviceProvider.CreateScope();
             IConsoleApplication consoleApplication = scope.ServiceProvider.GetRequiredService<IConsoleApplication>();
@@ -44,6 +54,7 @@ namespace Leahey.NasaApi
                 .Run()
                 .ConfigureAwait(true);
             DisposeServices();
+            //ncrunch: no coverage end
         }
     }
 }

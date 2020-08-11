@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 
 namespace Leahey.NasaApi.Implementations
@@ -12,6 +13,7 @@ namespace Leahey.NasaApi.Implementations
         /// <summary>
         /// Constructs a new NasaApiException.
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public NasaApiException() { }
 
         /// <summary>
@@ -30,6 +32,7 @@ namespace Leahey.NasaApi.Implementations
         /// <summary>
         /// Serialization constructor.
         /// </summary>
+        [ExcludeFromCodeCoverage]
         protected NasaApiException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }

@@ -10,10 +10,10 @@ namespace Leahey.NasaApi.Interfaces
     {
         Task<HttpResponseMessage> GetAsync(string url);
 
-        //[Obsolete("Use new GetRoverPhotosAsync() instead.")]
-        //Task<MarsRoverPhoto> GetRoverPhotoAsync(string url);
-
         Task<IEnumerable<MarsRoverPhoto>> GetMarsRoverPhotosAsync(string roverName, string apiKey, int? page, string earthDate, string cameraName = "");
         Task<IEnumerable<MarsRoverPhoto>> GetMarsRoverPhotosAsync(string roverName, string apiKey, int? page, int sol, string cameraName = "");
+
+        void DownloadFile(string address, string fileName);
+        void DownloadFileAsync(string address, string fileName);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Leahey.NasaApi.CodeQuality
 {
@@ -6,6 +7,7 @@ namespace Leahey.NasaApi.CodeQuality
     /// Instructs NDepend to ignore the decorated symbol entirely.
     /// </summary>
     [AttributeUsage(AttributeTargets.All)]
+    [ExcludeFromCodeCoverage]
     public sealed class NDependIgnoreAttribute : Attribute
     {
         public NDependIgnoreAttribute() :

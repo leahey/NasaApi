@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 
 namespace Leahey.NasaApi.Implementations
@@ -9,36 +10,26 @@ namespace Leahey.NasaApi.Implementations
         /// <summary>
         /// Constructs a new NasaApiException.
         /// </summary>
-        public MarsRoverPhotoApiException()
-        {
-
-        }
+        [ExcludeFromCodeCoverage]
+        public MarsRoverPhotoApiException() { }
 
         /// <summary>
         /// Constructs a new NasaApiException.
         /// </summary>
         /// <param name="message">The exception message</param>
-        public MarsRoverPhotoApiException(string message) : base(message)
-        {
-
-        }
+        public MarsRoverPhotoApiException(string message) : base(message) { }
 
         /// <summary>
         /// Constructs a new NasaApiException.
         /// </summary>
         /// <param name="message">The exception message</param>
         /// <param name="innerException">The inner exception</param>
-        public MarsRoverPhotoApiException(string message, Exception innerException) : base(message, innerException)
-        {
-
-        }
+        public MarsRoverPhotoApiException(string message, Exception innerException) : base(message, innerException) { }
 
         /// <summary>
         /// Serialization constructor.
         /// </summary>
-        protected MarsRoverPhotoApiException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-
-        }
+        [ExcludeFromCodeCoverage]
+        protected MarsRoverPhotoApiException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace Leahey.NasaApi.Models
 {
+    [ExcludeFromCodeCoverage]
     public class MarsRover
     {
         [JsonPropertyName("id")]

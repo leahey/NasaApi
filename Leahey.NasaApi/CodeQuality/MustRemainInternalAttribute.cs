@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Leahey.NasaApi.CodeQuality
 {
@@ -10,6 +9,7 @@ namespace Leahey.NasaApi.CodeQuality
     /// to ignore decorated methods.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
+    [ExcludeFromCodeCoverage]
     public sealed class MustRemainInternalAttribute : Attribute
     {
         public string Reason { get; }
