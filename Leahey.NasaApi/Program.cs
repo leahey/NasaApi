@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Leahey.NasaApi
 {
-    class Program
+    sealed class Program
     {
         #region private fields
         private static IServiceProvider _serviceProvider;

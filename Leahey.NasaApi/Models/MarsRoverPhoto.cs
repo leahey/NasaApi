@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
-using Leahey.NasaApi.Interfaces;
 
-namespace Leahey.NasaApi.Implementations
+namespace Leahey.NasaApi.Models
 {
     public class MarsRoverPhoto
     {

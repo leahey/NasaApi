@@ -1,4 +1,3 @@
-using Leahey.NasaApi.Implementations;
 using System;
 using Xunit;
 
@@ -6,7 +5,7 @@ namespace Leahey.NasaApi.Test
 {
     public class ConsoleApplicationTest
     {
-        private ConsoleApplication _tested;
+        //private ConsoleApplication _tested;
 
         [Fact]
         public void Test1()

@@ -1,14 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Leahey.NasaApi.Implementations;
+using Leahey.NasaApi.Models;
 
 namespace Leahey.NasaApi.Interfaces
 {
     public interface INasaApiClient
     {
-        Task<HttpResponseMessage> GetAsync(string str);
-        Task<string> GetRoverPhotoStringAsync(string str);
-        Task<MarsRoverPhoto> GetRoverPhotoAsync(string str);
+        Task<HttpResponseMessage> GetAsync(string url);
+
+        //[Obsolete("Use new GetRoverPhotosAsync() instead.")]
+        //Task<MarsRoverPhoto> GetRoverPhotoAsync(string url);
+
+        Task<IEnumerable<MarsRoverPhoto>> GetMarsRoverPhotosAsync(string roverName, string apiKey, int? page, string earthDate, string cameraName = "");
+        Task<IEnumerable<MarsRoverPhoto>> GetMarsRoverPhotosAsync(string roverName, string apiKey, int? page, int sol, string cameraName = "");
     }
 }

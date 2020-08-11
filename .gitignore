@@ -50,6 +50,7 @@ Thumbs.db
 
 # NDepend
 *.ndproj
+NDependOut/
 
 ### VisualStudio ###
 ## Ignore Visual Studio temporary files, build results, and
@@ -110,6 +111,7 @@ bld/
 # NCrunch
 _NCrunch_*
 .*crunch*.local.xml
+*.ncrunchsolution
 
 # SQL Server files
 *.mdf
