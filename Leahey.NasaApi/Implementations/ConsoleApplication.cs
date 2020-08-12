@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml;
 using Leahey.NasaApi.CodeQuality;
@@ -13,13 +14,13 @@ using Leahey.NasaApi.Models;
 
 namespace Leahey.NasaApi.Implementations
 {
+    //ncrunch: no coverage start
     public class ConsoleApplication : IConsoleApplication
     {
         #region private
         private readonly INasaApiClient _nasaApiClient;
         private const string ApiKey = "HLwOWblObCvPU07yhPPS70hNlvo32SC1Xa0Na7yp";
 
-        //ncrunch: no coverage start
         [NDependIgnore]
         [ExcludeFromCodeCoverage]
         private async Task RetrieveRoverPhotos(string roverName, int? page, string earthDate)
@@ -45,7 +46,6 @@ namespace Leahey.NasaApi.Implementations
 
             Console.WriteLine();
         }
-        //ncrunch: no coverage end
 
         /// <summary>
         /// Prompts for what type of action to take.
@@ -54,13 +54,11 @@ namespace Leahey.NasaApi.Implementations
         [ExcludeFromCodeCoverage]
         private int InitialMenu()
         {
-            Console.WriteLine("*** Downloads images for selected date and rover ***");
-            Console.WriteLine();
             Console.WriteLine("Select from the following:");
             Console.WriteLine("1. Get all photos for Curiosity on June 3, 2015");
             Console.WriteLine("2. Get all photos for a specified rover on a certain date.");
             Console.WriteLine("3. Get all photos for all rovers on a certain date.");
-            //Console.WriteLine("4. Get all photos for all rovers for dates in Dates.txt.");
+            Console.WriteLine("4. Get all photos for all rovers for dates in Dates.txt.");
 
             Console.WriteLine("0. Exit");
             Console.WriteLine();
@@ -77,8 +75,8 @@ namespace Leahey.NasaApi.Implementations
                     if (menuitem == 0      // exit 
                         || menuitem == 1   // Curiosity, 6/4/2015
                         || menuitem == 2   // any rover, any date
-                        || menuitem == 3)   // all rovers, any date
-                        //|| menuitem == 4)  // read dates from file
+                        || menuitem == 3   // all rovers, any date
+                        || menuitem == 4)  // read dates from file
                     {
                         result = menuitem;
                     }
@@ -183,60 +181,102 @@ namespace Leahey.NasaApi.Implementations
                 Console.WriteLine($"Saved {photo.Rover.Name} {photo.Camera.Name} photo to {filename}.");
             }
 
-            //ncrunch: no coverage start
             static string GetImagePath(MarsRoverPhoto photo)
             {
                 return Path.Combine(Path.GetTempPath(), "NasaPhotos", "MarsRovers", photo.Rover.Name, photo.Camera.Name, photo.EarthDate);
             }
-            //ncrunch: no coverage end
         }
-        
+
         #endregion
 
-        //ncrunch: no coverage start
+        private async Task HandleAction01Async()
+        {
+            await RetrieveRoverPhotos("curiosity", null, "2015-06-03").ConfigureAwait(true);
+        }
+
+        private async Task<int> HandleAction02Async()
+        {
+            var result = 2;
+
+            var values = GetRoverNameAndDate();
+            if (values.name == "exit")
+            {
+                result = 0;
+            }
+            else
+            {
+                await RetrieveRoverPhotos(values.name, null, values.date).ConfigureAwait(true);
+            }
+
+            return result;
+        }
+
+        private async Task HandleAction03Async()
+        {
+            var earthDate = GetEarthDate();
+
+            await GetRoverPhotosForDate(earthDate).ConfigureAwait(true);
+        }
+
+        private async Task GetRoverPhotosForDate(string earthDate)
+        {
+            // get photos for all 3 rovers
+            await RetrieveRoverPhotos(MarsRoverUtils.Rover_Spirit, null, earthDate).ConfigureAwait(true);
+            await RetrieveRoverPhotos(MarsRoverUtils.Rover_Opportunity, null, earthDate).ConfigureAwait(true);
+            await RetrieveRoverPhotos(MarsRoverUtils.Rover_Curiosity, null, earthDate).ConfigureAwait(true);
+        }
+
+        private async Task HandleAction04Async(string dataFilename)
+        {
+            var assemblyPath = Path.GetDirectoryName(Assembly.GetAssembly(this.GetType()).Location);
+            var filepath = Path.Combine(assemblyPath, "data", dataFilename);
+
+            if (File.Exists(filepath))
+            {
+                var contents = File.ReadAllLines(filepath);
+
+                foreach (var date in contents)
+                {
+                    if (!DateTime.TryParse(date, out _))
+                    {
+                        Console.WriteLine($"Given date string, '{date}' is an invalid date and cannot be used for querying.");
+                        Console.WriteLine();
+                    }
+                    else
+                    {
+                        await GetRoverPhotosForDate(date).ConfigureAwait(true);
+                    }
+                }
+            }
+        }
+
         [NDependIgnore]
         public async Task Run()
         {
             try
             {
+                Console.WriteLine("*** Downloads images for selected date and rover ***");
+                Console.WriteLine();
+
                 var actionNumber = InitialMenu();
                 while (actionNumber > 0)
                 {
-                    string roverName = "opportunity";
-                    int? page = null;
-                    string earthDate = "2012-04-01";
-
                     if (actionNumber == 1)
                     {
-                        roverName = "curiosity";
-                        earthDate = "2015-06-03";
-                        await RetrieveRoverPhotos(roverName, page, earthDate).ConfigureAwait(true);
+                        await HandleAction01Async().ConfigureAwait(true);
                     }
                     else if (actionNumber == 2)
                     {
-                        var values = GetRoverNameAndDate();
-                        if (values.name == "exit")
-                        {
-                            actionNumber = 0;
-                        }
-                        else
-                        {
-                            roverName = values.name;
-                            earthDate = values.date;
-                            await RetrieveRoverPhotos(roverName, page, earthDate).ConfigureAwait(true);
-                        }
+                        actionNumber = await HandleAction02Async().ConfigureAwait(true);
                     }
                     else if (actionNumber == 3)
                     {
-                        roverName = string.Empty;
-                        earthDate = GetEarthDate();
-
-                        // get photos for all 3 rovers
-                        await RetrieveRoverPhotos(MarsRoverUtils.Rover_Spirit, page, earthDate).ConfigureAwait(true);
-                        await RetrieveRoverPhotos(MarsRoverUtils.Rover_Opportunity, page, earthDate).ConfigureAwait(true);
-                        await RetrieveRoverPhotos(MarsRoverUtils.Rover_Curiosity, page, earthDate).ConfigureAwait(true);
+                        await HandleAction03Async().ConfigureAwait(true);
                     }
-
+                    else if (actionNumber == 4)
+                    {
+                        await HandleAction04Async("dates.txt").ConfigureAwait(true);
+                    }
 
                     if (actionNumber > 0)
                     {
@@ -250,7 +290,6 @@ namespace Leahey.NasaApi.Implementations
                 Console.WriteLine($"Message :{e.Message} ");
             }
         }
-        //ncrunch: no coverage end
 
 
         [NDependIgnore]
@@ -260,4 +299,5 @@ namespace Leahey.NasaApi.Implementations
             _nasaApiClient = nasaApiClient;
         }
     }
+    //ncrunch: no coverage end
 }
