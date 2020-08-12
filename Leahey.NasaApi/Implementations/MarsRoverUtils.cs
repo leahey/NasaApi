@@ -11,9 +11,9 @@ namespace Leahey.NasaApi.Implementations
     public class MarsRoverUtils : IMarsRoverUtils
     {
         #region consts
-        private const string Rover_Opportunity = "opportunity";
-        private const string Rover_Spirit = "spirit";
-        private const string Rover_Curiosity = "curiosity";
+        public const string Rover_Opportunity = "opportunity";
+        public const string Rover_Spirit = "spirit";
+        public const string Rover_Curiosity = "curiosity";
 
         private const string RoverCam_FrontHazardAvoidanceCam = "fhaz";
         private const string RoverCam_RearHazardAvoidanceCam = "rhaz";

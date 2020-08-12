@@ -36,8 +36,8 @@ namespace Leahey.NasaApi
             services
                 .AddSingleton<IConsoleApplication, ConsoleApplication>()
                 .AddSingleton<INasaApiClient, NasaApiClient>()
-                .AddScoped<IWebClientProxy, WebClientProxy>()
-                .AddScoped<IMarsRoverUtils, MarsRoverUtils>();
+                .AddSingleton<IWebClientProxy, WebClientProxy>() // must be singleton since consumed by singleton
+                .AddSingleton<IMarsRoverUtils, MarsRoverUtils>();
             _serviceProvider = services.BuildServiceProvider(true);
         }
 
